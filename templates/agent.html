@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <title>Fiche Agent</title>
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background-color: #1f1f1f;
@@ -13,7 +17,7 @@
       }
 
       .container {
-        max-width: 900px;
+        max-width: 1200px;
         margin: 40px auto;
         background-color: #2a2a2a;
         padding: 40px;
@@ -59,6 +63,33 @@
         font-size: 15px;
       }
 
+      .chart-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+        justify-content: space-between;
+      }
+
+      .chart-box {
+        width: calc(50% - 10px); /* Deux colonnes avec espace */
+        background-color: #111;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px rgba(255, 0, 0, 0.1);
+      }
+
+      .chart-box h4 {
+        text-align: center;
+        color: #ff6666;
+        margin-bottom: 10px;
+      }
+
+      .chart-box img {
+        width: 100%;
+        border-radius: 8px;
+      }
+
       .charts img {
         max-width: 100%;
         margin-top: 10px;
@@ -86,45 +117,18 @@
         margin-top: 10px;
       }
 
-      fieldset {
-        border: 1px solid #444;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 10px;
-        background-color: #1a1a1a;
-      }
-
-      legend {
-        font-weight: bold;
-        color: #ff4444;
-      }
-
-      label {
-        display: block;
-        margin-bottom: 8px;
-      }
-
-      button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 6px;
-        background-color: #ff4444;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      button:hover {
-        background-color: #cc0000;
-      }
-
       footer {
         margin-top: 60px;
         text-align: center;
         color: #888;
         font-size: 12px;
+      }
+
+      /* Responsive fallback */
+      @media (max-width: 768px) {
+        .chart-box {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -142,36 +146,27 @@
         <p>📍 <strong>Localisation :</strong> {{ localisation }}</p>
         <p>⚖️ <strong>Poids :</strong> {{ poids }} kg</p>
         <p>📏 <strong>Taille :</strong> {{ taille }} cm</p>
-        <p>🎂 <strong>Age :</strong> {{ age }}</p>
+        <p>🎂 <strong>Âge :</strong> {{ age }}</p>
         <p>🗂️ <strong>Catégorie :</strong> {{ categorie }}</p>
+        {% if alerte %}
+            <div style="background-color:#661111; padding: 15px; margin: 20px 0; border-radius: 8px; color: #ffdddd; font-weight: bold; text-align: center;">
+                {{ alerte }}
+            </div>
+        {% endif %}
+
       </div>
 
       <div class="charts">
-        <h3>📈 Évolution des Tests Physiques</h3>
+        <h3>📉 Évolution des Tests Physiques</h3>
 
-        <form method="POST">
-          <input type="hidden" name="matricule" value="{{ matricule }}" />
-          <fieldset>
-            <legend>Tests à afficher :</legend>
-            {% for key, label in test_labels.items() %}
-            <label>
-              <input
-                type="checkbox"
-                name="tests"
-                value="{{ key }}"
-                {% if key in selected_tests %}checked{% endif %}
-              />
-              {{ label }}
-            </label>
-            {% endfor %}
-          </fieldset>
-          <button type="submit">🔁 Mettre à jour</button>
-        </form>
-
-        <img
-          src="data:image/png;base64,{{ test_chart }}"
-          alt="Graphique des tests physiques"
-        />
+        <div class="chart-grid">
+          {% for label, chart in charts %}
+          <div class="chart-box">
+            <h4>{{ label }}</h4>
+            <img src="data:image/png;base64,{{ chart }}" alt="Graphique {{ label }}" />
+          </div>
+          {% endfor %}
+        </div>
 
         <h3>⚖️ Évolution de l'IMC</h3>
         {% if imc_chart %}
@@ -187,3 +182,5 @@
     <footer>Application de Suivi Personnalisé – Pompier & Santé © 2025</footer>
   </body>
 </html>
+
+
