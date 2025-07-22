@@ -72,7 +72,7 @@
       }
 
       .chart-box {
-        width: calc(50% - 10px); /* Deux colonnes avec espace */
+        width: calc(50% - 10px);
         background-color: #111;
         padding: 15px;
         border-radius: 10px;
@@ -124,7 +124,6 @@
         font-size: 12px;
       }
 
-      /* Responsive fallback */
       @media (max-width: 768px) {
         .chart-box {
           width: 100%;
@@ -148,17 +147,29 @@
         <p>📏 <strong>Taille :</strong> {{ taille }} cm</p>
         <p>🎂 <strong>Âge :</strong> {{ age }}</p>
         <p>🗂️ <strong>Catégorie :</strong> {{ categorie }}</p>
-        {% if alerte %}
-            <div style="background-color:#661111; padding: 15px; margin: 20px 0; border-radius: 8px; color: #ffdddd; font-weight: bold; text-align: center;">
-                {{ alerte }}
-            </div>
-        {% endif %}
 
+        {% if alerte %}
+        <div style="background-color:#661111; padding: 15px; margin: 20px 0; border-radius: 8px; color: #ffdddd; font-weight: bold; text-align: center;">
+          {{ alerte }}
+          <br />
+          <button onclick="document.getElementById('diagnostic').style.display='block'" style="margin-top: 10px; background-color:#cc0000; border:none; padding:8px 14px; border-radius:6px; color:white; cursor:pointer;">📋 En savoir plus</button>
+        </div>
+        <div id="diagnostic" style="display:none; background-color:#2a2a2a; padding:20px; border-radius:10px; margin-bottom: 30px;">
+          <h4 style="color:#ff6666;">🔍 Diagnostic détaillé :</h4>
+          <ul>
+            {% for item in baisses_detaillees %}
+            <li style="margin:10px 0;">
+              <strong>{{ item.test }}</strong> : baisse de <strong>{{ item.pourcentage }}%</strong>
+              (de {{ item.valeur_max }} en {{ item.annee_max }} à {{ item.valeur_recent }} en {{ item.annee_recent }})
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
       </div>
 
       <div class="charts">
         <h3>📉 Évolution des Tests Physiques</h3>
-
         <div class="chart-grid">
           {% for label, chart in charts %}
           <div class="chart-box">
@@ -168,12 +179,21 @@
           {% endfor %}
         </div>
 
-        <h3>⚖️ Évolution de l'IMC</h3>
-        {% if imc_chart %}
-        <img src="data:image/png;base64,{{ imc_chart }}" alt="Graphique IMC" />
-        {% else %}
-        <p class="no-data">Aucune donnée IMC disponible.</p>
-        {% endif %}
+        <h3>⚖️ Évolution de l'IMC et du Tour de Taille</h3>
+        <div class="chart-grid">
+          {% if imc_chart %}
+          <div class="chart-box">
+            <h4>IMC</h4>
+            <img src="data:image/png;base64,{{ imc_chart }}" alt="Graphique IMC" />
+          </div>
+          {% endif %}
+          {% if tour_chart %}
+          <div class="chart-box">
+            <h4>Tour de Taille</h4>
+            <img src="data:image/png;base64,{{ tour_chart }}" alt="Graphique Tour de Taille" />
+          </div>
+          {% endif %}
+        </div>
       </div>
 
       <a class="back-link" href="/">🔙 Revenir à l’accueil</a>
@@ -182,5 +202,6 @@
     <footer>Application de Suivi Personnalisé – Pompier & Santé © 2025</footer>
   </body>
 </html>
+
 
 
