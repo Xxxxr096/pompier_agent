@@ -64,6 +64,53 @@
         color: #888;
         font-size: 12px;
       }
+      @media (max-width: 768px) {
+        .container {
+          width: 90%;
+          margin: 40px auto;
+          padding: 25px;
+        }
+      
+        h2 {
+          font-size: 20px;
+        }
+      
+        form input[type="text"] {
+          width: 100%;
+          font-size: 16px;
+        }
+      
+        form button {
+          width: 100%;
+          font-size: 16px;
+        }
+      
+        .error {
+          font-size: 14px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        h2 {
+          font-size: 18px;
+        }
+      
+        form input[type="text"],
+        form button {
+          font-size: 15px;
+          padding: 10px;
+        }
+      
+        .error {
+          font-size: 13px;
+        }
+      }
+      
+      /* Empêcher le débordement horizontal */
+      html, body {
+        overflow-x: hidden;
+      }
+      
     </style>
   </head>
   <body>
