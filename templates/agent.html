@@ -148,6 +148,15 @@
         <p>📏 <strong>Taille :</strong> {{ taille }} cm</p>
         <p>🎂 <strong>Âge :</strong> {{ age }}</p>
         <p>🗂️ <strong>Catégorie :</strong> {{ categorie }}</p>
+        <p>
+          {% if genre.lower() == "homme" %}
+            👨 <strong>Genre :</strong> Homme
+          {% elif genre.lower() == "femme" %}
+            👩 <strong>Genre :</strong> Femme
+          {% else %}
+            🧍 <strong>Genre :</strong> Inconnu
+          {% endif %}
+        </p>
 
         {% if alerte %}
         <div style="background-color:#661111; padding: 15px; margin: 20px 0; border-radius: 8px; color: #ffdddd; font-weight: bold; text-align: center;">
@@ -167,6 +176,23 @@
           </ul>
         </div>
         {% endif %}
+        {% if alertes_sante %}
+          <div style="background-color:#114466; padding: 15px; margin: 20px 0; border-radius: 8px; color: #ddf0ff; font-weight: bold; text-align: center;">
+            ⚠️ Alerte Santé détectée !
+            <br />
+            <button onclick="document.getElementById('sante-details').style.display='block'" style="margin-top: 10px; background-color:#0077aa; border:none; padding:8px 14px; border-radius:6px; color:white; cursor:pointer;">📋 Voir les détails</button>
+          </div>
+
+          <div id="sante-details" style="display:none; background-color:#2a2a2a; padding:20px; border-radius:10px; margin-bottom: 30px;">
+            <h4 style="color:#66ccff;">🔬 Détails des alertes santé :</h4>
+            <ul>
+              {% for item in alertes_sante_details %}
+              <li style="margin:10px 0;">{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
       </div>
 
       <div class="charts">
