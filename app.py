@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 import pandas as pd
 import os
 import matplotlib
@@ -9,6 +9,30 @@ import io
 import base64
 
 app = Flask(__name__)
+
+
+def check_auth(username, password):
+    return username == "demo" and password == "1234"
+
+
+def authenticate():
+    return Response(
+        "Authentification requise", 401, {"WWW-Authenticate": 'Basic realm="Demo"'}
+    )
+
+
+def requires_auth(f):
+    from functools import wraps
+
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+
+    return decorated
+
 
 # Charger les données une fois
 DATA_PATH = "dataset_corrige.csv"
@@ -122,6 +146,7 @@ def generate_alertes_sante_evolution(agent_data):
 
 
 @app.route("/", methods=["GET", "POST"])
+@requires_auth
 def index():
     error = None
 
