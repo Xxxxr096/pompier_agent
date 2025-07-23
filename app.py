@@ -62,10 +62,26 @@ def index():
         # --- infos agent ---
         grade = agent_data["grade"].iloc[0] if "grade" in agent_data else "Inconnu"
         grade_image = f"/static/grades/{grade.lower().replace(' ', '_')}.png"
-        poids = agent_data["poids"].iloc[-1] if "poids" in agent_data else "N/A"
-        taille = agent_data["taille"].iloc[-1] if "taille" in agent_data else "N/A"
+        poids = "N/A"
+        for an in range(2024, 2010, -1):
+            poids_annee = agent_data[agent_data["année"] == an]["poids"].dropna()
+            if not poids_annee.empty:
+                poids = f" {poids_annee.iloc[0]} ({an})"
+                break
+
+        taille = (
+            agent_data["taille"].dropna().iloc[-1]
+            if "taille" in agent_data and not agent_data["taille"].dropna().empty
+            else "N/A"
+        )
+
         localisation = agent_data["cis"].iloc[-1] if "cis" in agent_data else "N/A"
-        age = agent_data["age"].iloc[-1] if "age" in agent_data else "N/A"
+        age = (
+            agent_data["age"].dropna().iloc[-1]
+            if "age" in agent_data and not agent_data["age"].dropna().empty
+            else "N/A"
+        )
+
         categorie = (
             agent_data["catégorie"].iloc[-1] if "catégorie" in agent_data else "N/A"
         )
